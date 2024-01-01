@@ -17,10 +17,15 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -37,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -46,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.proyectovenusappfinal.ui.theme.ProyectoVenusAppFinalTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,7 +125,8 @@ fun lOGO_Y_REGISTRO() {
                     //Modificamos la forma de la imagen del logo
                     .clip(CircleShape)
                     //Establecemos un tamaño para la imagen
-                    .size(180.dp),        )
+                    .size(180.dp),
+            )
         }
         Box(
             modifier = Modifier
@@ -143,6 +151,13 @@ fun lOGO_Y_REGISTRO() {
                             color = Color.White
                         )
                     },
+                    //Colocamos un Icon
+                    leadingIcon = {
+                                  Icon(imageVector = Icons.Default.Email,
+                                      contentDescription = "Email Icon",
+                                      //Cambiamos el color del Icon
+                                  tint = Color.White)
+                    },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -157,13 +172,21 @@ fun lOGO_Y_REGISTRO() {
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = {
+                        password = it
+                    },
                     label = {
                         Text(
                             text = "Password",
-                            // Establecemos el color del texto a verde
                             color = Color.White
                         )
+                    },
+                    leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = "Password Icon",
+                                tint = Color.White
+                            )
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier
