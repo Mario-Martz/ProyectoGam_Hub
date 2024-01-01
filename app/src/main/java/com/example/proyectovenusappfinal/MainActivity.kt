@@ -101,7 +101,7 @@ fun lOGO_Y_REGISTRO() {
         //Creamos un Box donde Guardaremos el logo
         Box(
             modifier = Modifier
-                .padding(top = 50.dp)
+                .padding(top = 50.dp, bottom = 50.dp)
                 .constrainAs(BoxLogo) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
