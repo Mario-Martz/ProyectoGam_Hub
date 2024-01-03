@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -42,7 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -51,7 +49,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.proyectovenusappfinal.ui.theme.ProyectoVenusAppFinalTheme
+import com.example.proyectovenusappfinal.views.Login.BackgroundImageRegister
+import com.example.proyectovenusappfinal.views.Login.FormulRegister
+import com.example.proyectovenusappfinal.views.Login.PantallaRegisterUser
 
 
 class MainActivity : ComponentActivity() {
@@ -64,13 +69,26 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    BackgroundImage()
-                    lOGO_Y_REGISTRO()
-
+                    val navigationController = rememberNavController()
+                    NavHost(navController = navigationController, startDestination = "Login"){
+                        composable("Login"){
+                            PantallaInicio(navigationController)
+                        }
+                        composable("Register_User"){
+                            PantallaRegisterUser(navigationController)
+                        }
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+fun PantallaInicio(navigationController: NavHostController) {
+    val Navegacion = navigationController
+    BackgroundImage()
+    lOGO_Y_REGISTRO(Navegacion)
 }
 
 @Composable
@@ -94,7 +112,7 @@ fun BackgroundImage() {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun lOGO_Y_REGISTRO() {
+fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
     //Creamos las variables de Email y de password
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -128,6 +146,7 @@ fun lOGO_Y_REGISTRO() {
                     .size(180.dp),
             )
         }
+
         Box(
             modifier = Modifier
                 .constrainAs(BoxRegistrer){
@@ -217,6 +236,8 @@ fun lOGO_Y_REGISTRO() {
                     text = AnnotatedString("¿No tienes cuenta? Regístrate aquí"),
                     onClick = { offset ->
                         // Lógica a realizar cuando se hace clic en el texto
+                              Navegacion.navigate("Register_User")
+
                     },
                     modifier = Modifier.padding(8.dp),
                     style = TextStyle(color = Color.LightGray)
@@ -267,7 +288,14 @@ fun lOGO_Y_REGISTRO() {
 @Composable
 fun GreetingPreview() {
     ProyectoVenusAppFinalTheme {
-        BackgroundImage()
-        lOGO_Y_REGISTRO()
+        //val navigationController
+
+        //BackgroundImage()
+        //lOGO_Y_REGISTRO(Navegacion)
+
+        //VistaPrevia del Formulario de registro
+        BackgroundImageRegister()
+        FormulRegister()
+       // PantallaRegisterUser()
     }
 }
