@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "425972417177",
+    "project_id": "final-app-e937e",
+    "storage_bucket": "final-app-e937e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425972417177:android:7b37515a09884622cd2e08",
+        "android_client_info": {
+          "package_name": "com.example.proyectovenusappfinal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzjAAOx0ZjZ_pawA-vBolECTnIhTdHT8U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
