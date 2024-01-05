@@ -1,4 +1,4 @@
-package com.example.proyectovenusappfinal.ui.theme
+package com.example.proyectovenusappfinal.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build

@@ -1,8 +1,3 @@
-package com.example.proyectovenusappfinal
-
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,12 +20,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,42 +42,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.proyectovenusappfinal.ui.theme.ProyectoVenusAppFinalTheme
-import com.example.proyectovenusappfinal.views.Login.BackgroundImageRegister
-import com.example.proyectovenusappfinal.views.Login.FormulRegister
-import com.example.proyectovenusappfinal.views.Login.PantallaRegisterUser
-
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            ProyectoVenusAppFinalTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navigationController = rememberNavController()
-                    NavHost(navController = navigationController, startDestination = "Login"){
-                        composable("Login"){
-                            PantallaInicio(navigationController)
-                        }
-                        composable("Register_User"){
-                            PantallaRegisterUser(navigationController)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+import com.example.proyectovenusappfinal.R
+import com.example.proyectovenusappfinal.presentation.Navigation.AppScreen
 
 @Composable
-fun PantallaInicio(navigationController: NavHostController) {
+fun LoginPrincipal(navigationController: NavHostController) {
     val Navegacion = navigationController
     BackgroundImage()
     lOGO_Y_REGISTRO(Navegacion)
@@ -172,10 +134,10 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
                     },
                     //Colocamos un Icon
                     leadingIcon = {
-                                  Icon(imageVector = Icons.Default.Email,
-                                      contentDescription = "Email Icon",
-                                      //Cambiamos el color del Icon
-                                  tint = Color.White)
+                        Icon(imageVector = Icons.Default.Email,
+                            contentDescription = "Email Icon",
+                            //Cambiamos el color del Icon
+                            tint = Color.White)
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     modifier = Modifier
@@ -183,8 +145,7 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
                         .padding(start = 30.dp, end = 30.dp),
                     textStyle = TextStyle(color = Color.Magenta),
                     colors = OutlinedTextFieldDefaults.colors(
-                        cursorColor = contentColorFor(Color.Magenta),
-                        focusedBorderColor = Color.Magenta,
+                        focusedBorderColor = Color.Cyan,
                         unfocusedBorderColor = Color.Magenta,
                     )
                 )
@@ -201,11 +162,11 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
                         )
                     },
                     leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = "Password Icon",
-                                tint = Color.White
-                            )
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Password Icon",
+                            tint = Color.White
+                        )
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier
@@ -213,8 +174,7 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
                         .padding(start = 30.dp, end = 30.dp),
                     textStyle = TextStyle(color = Color.Magenta),
                     colors = OutlinedTextFieldDefaults.colors(
-                        cursorColor = contentColorFor(Color.Magenta),
-                        focusedBorderColor = Color.Magenta,
+                        focusedBorderColor = Color.Cyan,
                         unfocusedBorderColor = Color.Magenta,
                     )
                 )
@@ -234,9 +194,9 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
                 // Uso de ClickableText para hacer el texto "Regístrate aquí" cliclable
                 ClickableText(
                     text = AnnotatedString("¿No tienes cuenta? Regístrate aquí"),
-                    onClick = { offset ->
+                    onClick = { Ir_Registro ->
                         // Lógica a realizar cuando se hace clic en el texto
-                              Navegacion.navigate("Register_User")
+                        Navegacion.navigate(route = AppScreen.Register.router)
 
                     },
                     modifier = Modifier.padding(8.dp),
@@ -286,16 +246,7 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun GreetingPreview() {
-    ProyectoVenusAppFinalTheme {
-        //val navigationController
-
-        //BackgroundImage()
-        //lOGO_Y_REGISTRO(Navegacion)
-
-        //VistaPrevia del Formulario de registro
-        BackgroundImageRegister()
-        FormulRegister()
-       // PantallaRegisterUser()
-    }
+fun PantallaLoginPrincipal() {
+    LoginPrincipal(rememberNavController())
 }
+
