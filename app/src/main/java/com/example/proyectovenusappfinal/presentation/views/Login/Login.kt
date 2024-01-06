@@ -1,4 +1,5 @@
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,15 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -33,18 +28,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectovenusappfinal.R
+import com.example.proyectovenusappfinal.components.DefaultOutlinedTextField
 import com.example.proyectovenusappfinal.presentation.Navigation.AppScreen
+import com.example.proyectovenusappfinal.presentation.views.components.ButtonFacebock
+import com.example.proyectovenusappfinal.presentation.views.components.ButtonGoogle
+import com.example.proyectovenusappfinal.presentation.views.components.ButtonIngresar
 
 @Composable
 fun LoginPrincipal(navigationController: NavHostController) {
@@ -122,34 +122,19 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                OutlinedTextField(
+                DefaultOutlinedTextField(
                     value = email,
-                    onValueChange = { email = it },
-                    label = {
-                        Text(
-                            text = "Email",
-                            // Establecemos el color del texto a verde
-                            color = Color.White
-                        )
-                    },
-                    //Colocamos un Icon
-                    leadingIcon = {
-                        Icon(imageVector = Icons.Default.Email,
-                            contentDescription = "Email Icon",
-                            //Cambiamos el color del Icon
-                            tint = Color.White)
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 30.dp, end = 30.dp),
-                    textStyle = TextStyle(color = Color.Magenta),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Cyan,
-                        unfocusedBorderColor = Color.Magenta,
-                    )
+                    onValueChange = { email = it},
+                    label = "Email",
+                    //leadingIconTint = Color.White,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    modifier = Modifier.fillMaxWidth().padding(start = 30.dp, end = 30.dp),
+                    textStyle = TextStyle(Color.Magenta),
+                    focusedBorderColor = Color.Cyan,
+                    unfocusedBorderColor = Color.Magenta
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+                var isPasswordVisible by remember { mutableStateOf(false) }
                 OutlinedTextField(
                     value = password,
                     onValueChange = {
@@ -161,35 +146,34 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
                             color = Color.White
                         )
                     },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = "Password Icon",
-                            tint = Color.White
-                        )
-                    },
+                    visualTransformation = if(isPasswordVisible) VisualTransformation.None else
+                        PasswordVisualTransformation(),
+                    //Tipo de dato
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 30.dp, end = 30.dp),
-                    textStyle = TextStyle(color = Color.Magenta),
+                    trailingIcon = {
+                        Icon(
+                            tint = Color.White,
+                            painter = if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility)
+                            else painterResource(id = R.drawable.ic_visibility_off),
+                            contentDescription = null,
+                            modifier = Modifier.clickable {
+                                isPasswordVisible = !isPasswordVisible
+                            }
+                        )
+                    },
+                    textStyle = TextStyle(Color.Magenta),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color.Cyan,
-                        unfocusedBorderColor = Color.Magenta,
+                        unfocusedBorderColor = Color.Magenta
                     )
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    modifier = Modifier
-                        .width(300.dp),
-                    onClick = {
-
-                    },
-                    colors = ButtonDefaults.buttonColors(Color.Magenta),
-                    content = { Text("Ingresar") }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+                ButtonIngresar()
+                Spacer(modifier = Modifier.height(8.dp))
 
                 // Uso de ClickableText para hacer el texto "Regístrate aquí" cliclable
                 ClickableText(
@@ -208,36 +192,10 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
                     color = Color.LightGray)
                 Spacer(modifier = Modifier.height(10.dp))
                 //Ceamos dos botones para iniciar cecion con google o con Faceboock
-                Button(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(300.dp),
-                    onClick = { },
-                    colors = ButtonDefaults.buttonColors(Color.White)) {
-                    Image(
-                        painterResource(id = R.drawable.logo_google),
-                        contentDescription = "Logo de google",
-                        modifier = Modifier
-                            .size(40.dp))
-                    Text(text = "Sign in with Google", color = Color.Black)
-                }
+                ButtonGoogle()
                 Spacer(modifier = Modifier.height(18.dp))
                 //Ceamos dos botones para iniciar cecion con google o con Faceboock
-                Button(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(300.dp),
-                    onClick = { },
-                    colors = ButtonDefaults.buttonColors(colorResource(id = R.color.btn_faceboock))
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.logo_faceboock),
-                        contentDescription = "Logo de Facebook",
-                        modifier = Modifier
-                            .size(40.dp)
-                    )
-                    Text(text = "Sign in with Facebook", color = Color.Black)
-                }
+                ButtonFacebock()
 
             }
         }

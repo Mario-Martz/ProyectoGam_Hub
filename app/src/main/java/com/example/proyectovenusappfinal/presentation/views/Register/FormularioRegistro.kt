@@ -1,33 +1,25 @@
-package com.example.proyectovenusappfinal.presentation.views.Login
+package com.example.proyectovenusappfinal.presentation.views.Register
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.provider.ContactsContract.CommonDataKinds.Email
 import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.focusable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,9 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,19 +35,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectovenusappfinal.R
+import com.example.proyectovenusappfinal.components.DefaultOutlinedTextField
 import com.example.proyectovenusappfinal.presentation.Navigation.AppScreen
 import java.util.regex.Pattern
 
@@ -91,7 +83,6 @@ fun FormulRegister(Navegacion: NavHostController){
 
     //Variables para los campos OutlinedTextField
     var nombre by remember { mutableStateOf("") }
-    var apellido by remember { mutableStateOf("") }
     var telefono by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -102,9 +93,6 @@ fun FormulRegister(Navegacion: NavHostController){
     //Vandera para validar si los campos estan o no vacios (NULL)
     var showNombreIcon by remember { mutableStateOf(false) }
     var nombreError by remember { mutableStateOf<String?>(null) }
-
-    var showApellidoIcon by remember { mutableStateOf(false) }
-    var apellidoError by remember { mutableStateOf<String?>(null) }
 
     var showtelefonoIcon by remember { mutableStateOf(false) }
     var telefonoError by remember { mutableStateOf<String?>(null) }
@@ -126,7 +114,7 @@ fun FormulRegister(Navegacion: NavHostController){
                 .constrainAs(BoxTitulo){
                        start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                        top.linkTo(parent.top, margin = 20.dp)
+                        top.linkTo(parent.top, margin = 80.dp)
                 }
                 ,contentAlignment = Alignment.Center){
                 Image(
@@ -148,37 +136,22 @@ fun FormulRegister(Navegacion: NavHostController){
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                    OutlinedTextField(
-                        value = nombre,
-                        onValueChange = {
-                            nombre = it
-                            showNombreIcon = false
-                            nombreError = null //Limpiamos el mensaje de error
-                        },
-                        label = {
-                            Text(
-                                text = "Nombre",
-                                color = Color.White
-                            )
-                        },
-                        // Colocamos un Icon
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Person Icon",
-                                tint = Color.White
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 30.dp, end = 30.dp),
-                        textStyle = TextStyle(color = Color.Magenta),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Color.Cyan,
-                            unfocusedBorderColor = Color.Magenta,
-                        )
-                    )
+                DefaultOutlinedTextField(
+                    value = nombre,
+                    onValueChange = {
+                        nombre = it
+                        showNombreIcon = false
+                        nombreError = null
+                    },
+                    label = "Nombre",
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 30.dp, end = 30.dp),
+                    textStyle = TextStyle(color = Color.Magenta),
+                    focusedBorderColor = Color.Cyan,
+                    unfocusedBorderColor = Color.Magenta
+                )
                     if (showNombreIcon) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -198,80 +171,19 @@ fun FormulRegister(Navegacion: NavHostController){
                         }
                     }
                 Spacer(modifier = Modifier.height(2.dp))
-                OutlinedTextField(
-                    value = apellido,
-                    onValueChange = {
-                        apellido = it
-                        //Limpiamos el mensaje de error y el icon de error
-                        showApellidoIcon = false
-                        apellidoError = null
-                                    },
-                    label = {
-                        Text(
-                            text = "Apellido`s",
-                            color = Color.White
-                            )
-                    },
-                    //Colocamos un icon
-                    leadingIcon = {
-                        Icon(imageVector = Icons.Default.Person,
-                            contentDescription = "Appellido Icon",
-                            //Camviamos de color
-                            tint = Color.White)
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 30.dp, end = 30.dp),
-                    //Editamos el color del texto que aparecera al escribir en el campo
-                    textStyle = TextStyle(color = Color.Magenta),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Cyan,
-                        unfocusedBorderColor = Color.Magenta
-                    )
-                )
-                //validamos que el campo de Nombre no este vacio o sea null
-                if(showApellidoIcon){
-                    Row (
-                        modifier = Modifier
-                            .background(Color.Black)
-                            .border(1.dp, Color.Red))
-                    {
-                        Icon(imageVector = Icons.Default.Warning,
-                            contentDescription = "Errro canpo nombre vacio",
-                            tint = Color.Yellow
-                        )
-                        Text(text = apellidoError ?: "",
-                            color = Color.Yellow)
-                    }
-                }
-                Spacer(modifier = Modifier.height(2.dp))
-                OutlinedTextField(
-                    value = telefono,
-                    onValueChange = {
-                                    telefono = it
+                DefaultOutlinedTextField(value = telefono,
+                    onValueChange = {telefono = it
                                     showtelefonoIcon = false
                                     telefonoError = null
                                     },
-                    label = {
-                        Text(text = "Telefono",
-                            color = Color.White)
-                    },
-                    leadingIcon = {
-                        Icon(imageVector = Icons.Default.Phone,
-                            contentDescription = "Icon Phone",
-                            tint = Color.White)
-                    },
+                    label = "Telefono",
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 30.dp, end = 30.dp),
-                    //Editamos el color del texto interno del componente
-                    textStyle = TextStyle(color = Color.Magenta),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Cyan,
-                        unfocusedBorderColor = Color.Magenta
-                    )
+                    textStyle = TextStyle(Color.Magenta),
+                    focusedBorderColor = Color.Cyan,
+                    unfocusedBorderColor = Color.Magenta
                 )
                 if(showtelefonoIcon){
                     Row(modifier = Modifier
@@ -286,35 +198,22 @@ fun FormulRegister(Navegacion: NavHostController){
                     }
                 }
                 Spacer(modifier = Modifier.height(2.dp))
-                OutlinedTextField(
+                DefaultOutlinedTextField(
                     value = email,
                     onValueChange = {
-                                    email = it
-                                    showEmailIcon = false
-                                    emailError = null
+                        email = it
+                        showEmailIcon = false
+                        emailError = null
                                     },
-                    label = {
-                        Text(text = "Email",
-                            color = Color.White
-                        )
-                    },
-                    leadingIcon = {
-                        Icon(imageVector = Icons.Default.Email,
-                            contentDescription = "Email icon",
-                            tint = Color.White
-                        )
-                    },
-                    //Tipo de datos que se va a ingresar
+                    label = "Email",
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 30.dp, end = 30.dp),
-                    textStyle = TextStyle(color = Color.Magenta),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Cyan,
-                        unfocusedBorderColor = Color.Magenta
+                    textStyle = TextStyle(Color.Magenta),
+                    focusedBorderColor = Color.Cyan,
+                    unfocusedBorderColor = Color.Magenta
                     )
-                )
                 if(showEmailIcon){
                     Row (modifier = Modifier
                         .background(Color.Black)
@@ -327,30 +226,38 @@ fun FormulRegister(Navegacion: NavHostController){
                     }
                 }
                 Spacer(modifier = Modifier.height(2.dp))
+                var isPasswordVisible by remember { mutableStateOf(false) }
                 OutlinedTextField(
                     value = password,
                     onValueChange = {
-                                    password = it
-                                    showPasswordIcon = false
-                                    passwordError = null
-                                    },
+                        password = it
+                        showPasswordIcon = false
+                        passwordError = null
+                    },
                     label = {
                         Text(
                             text = "Password",
                             color = Color.White
                         )
                     },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = "Icon contraseña",
-                            tint = Color.White)
-                    },
+                    visualTransformation = if(isPasswordVisible) VisualTransformation.None else
+                        PasswordVisualTransformation(),
                     //Tipo de dato
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 30.dp, end = 30.dp),
+                    trailingIcon = {
+                        Icon(
+                            tint = Color.White,
+                            painter = if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility)
+                            else painterResource(id = R.drawable.ic_visibility_off),
+                            contentDescription = null,
+                            modifier = Modifier.clickable {
+                                isPasswordVisible = !isPasswordVisible
+                            }
+                        )
+                    },
                     textStyle = TextStyle(Color.Magenta),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color.Cyan,
@@ -379,9 +286,6 @@ fun FormulRegister(Navegacion: NavHostController){
                         nombreError = if (nombre.isEmpty()) "Campo obligatorio" else null
                         showNombreIcon = nombreError != null
 
-                        apellidoError = if(apellido.isEmpty()) "Campo obligatorio" else null
-                        showApellidoIcon = apellidoError != null
-
                         telefonoError = if(telefono.isEmpty()) "Campo obligatorio" else null
                         showtelefonoIcon = telefonoError != null
 
@@ -402,7 +306,7 @@ fun FormulRegister(Navegacion: NavHostController){
 
 
                         //Verificamos si todos los campos esta llenos
-                        if(nombreError == null && apellidoError == null && telefonoError == null && emailError == null && passwordError ==null){
+                        if(nombreError == null && telefonoError == null && emailError == null && passwordError ==null){
                             Toast.makeText(context, "Cuenta creada exitosamente", Toast.LENGTH_SHORT).show()
                             //Regresamos a la pantalla Login
                             Navegacion.navigate(route = AppScreen.Login.router)
