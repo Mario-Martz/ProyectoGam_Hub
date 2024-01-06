@@ -1,4 +1,4 @@
-package com.example.proyectovenusappfinal.components
+package com.example.proyectovenusappfinal.presentation.components
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField

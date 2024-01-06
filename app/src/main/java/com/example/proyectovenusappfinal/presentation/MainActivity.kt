@@ -11,8 +11,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectovenusappfinal.presentation.Navigation.AppNavigation
 import com.example.proyectovenusappfinal.presentation.ui.theme.ProyectoVenusAppFinalTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     
     private lateinit var navController: NavHostController

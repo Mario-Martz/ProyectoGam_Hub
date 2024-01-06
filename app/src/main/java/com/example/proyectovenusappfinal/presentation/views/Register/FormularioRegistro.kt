@@ -49,7 +49,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectovenusappfinal.R
-import com.example.proyectovenusappfinal.components.DefaultOutlinedTextField
+import com.example.proyectovenusappfinal.presentation.components.DefaultOutlinedTextField
 import com.example.proyectovenusappfinal.presentation.Navigation.AppScreen
 import java.util.regex.Pattern
 

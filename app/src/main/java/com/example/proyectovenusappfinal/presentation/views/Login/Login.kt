@@ -1,3 +1,5 @@
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,15 +12,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -37,11 +45,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectovenusappfinal.R
-import com.example.proyectovenusappfinal.components.DefaultOutlinedTextField
+import com.example.proyectovenusappfinal.domain.Model.Response
+import com.example.proyectovenusappfinal.presentation.components.DefaultOutlinedTextField
 import com.example.proyectovenusappfinal.presentation.Navigation.AppScreen
+import com.example.proyectovenusappfinal.presentation.views.Login.LoginViewModel
 import com.example.proyectovenusappfinal.presentation.views.components.ButtonFacebock
 import com.example.proyectovenusappfinal.presentation.views.components.ButtonGoogle
 import com.example.proyectovenusappfinal.presentation.views.components.ButtonIngresar
@@ -72,13 +84,12 @@ fun BackgroundImage() {
         )
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
-    //Creamos las variables de Email y de password
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun lOGO_Y_REGISTRO(Navegacion: NavHostController, viewModel: LoginViewModel = hiltViewModel()) {
 
+
+
+    val loginFlow = viewModel.loginFlow.collectAsState()
     //Usamos un ConstrainLayout para enganchar los cajas del login y el registro de los usuarios
     ConstraintLayout(
         modifier = Modifier
@@ -123,12 +134,14 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 DefaultOutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it},
+                    value = viewModel.email.value,
+                    onValueChange = { viewModel.email.value = it},
                     label = "Email",
                     //leadingIconTint = Color.White,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    modifier = Modifier.fillMaxWidth().padding(start = 30.dp, end = 30.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 30.dp, end = 30.dp),
                     textStyle = TextStyle(Color.Magenta),
                     focusedBorderColor = Color.Cyan,
                     unfocusedBorderColor = Color.Magenta
@@ -136,9 +149,9 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
                 Spacer(modifier = Modifier.height(16.dp))
                 var isPasswordVisible by remember { mutableStateOf(false) }
                 OutlinedTextField(
-                    value = password,
+                    value = viewModel.password.value,
                     onValueChange = {
-                        password = it
+                        viewModel.password.value = it
                     },
                     label = {
                         Text(
@@ -172,7 +185,16 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-                ButtonIngresar()
+                Button(
+                    modifier = Modifier
+                        .width(300.dp),
+                    onClick = {
+                        Log.d("Boton Ingresar","EL email es: ${viewModel.email.value} y el password es: ${viewModel.password.value}")
+                        viewModel.login()
+                    },
+                    colors = ButtonDefaults.buttonColors(Color.Magenta),
+                    content = { Text("Ingresar") }
+                )
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Uso de ClickableText para hacer el texto "Regístrate aquí" cliclable
@@ -200,11 +222,42 @@ fun lOGO_Y_REGISTRO(Navegacion: NavHostController) {
             }
         }
     }
+    loginFlow.value.let { state ->
+        when (state) {
+            //Mostramos al usuario que la peticion se esta cargando
+            Response.Loading -> {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            is Response.Success -> {
+                Toast.makeText(LocalContext.current, "Usuario logeado", Toast.LENGTH_LONG).show()
+            }
+
+            is Response.Errors -> {
+                Toast.makeText(
+                    LocalContext.current,
+                    state.exception?.message ?: "Error al tratar de ingresar",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            else -> {
+                Toast.makeText(LocalContext.current, "Hoy no es tu dia de suerte", Toast.LENGTH_LONG).show()
+
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PantallaLoginPrincipal() {
-    LoginPrincipal(rememberNavController())
+   // LoginPrincipal(rememberNavController( ))
 }
 

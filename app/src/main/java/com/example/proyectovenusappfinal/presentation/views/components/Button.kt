@@ -1,5 +1,6 @@
 package com.example.proyectovenusappfinal.presentation.views.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -13,14 +14,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.proyectovenusappfinal.R
 
 @Composable
-fun ButtonIngresar(){
+fun ButtonIngresar(
+    email :String,
+    password: String
+){
     Button(
         modifier = Modifier
             .width(300.dp),
         onClick = {
+                  Log.d("Boton Ingresar","EL email es: ${email} y el password es: ${password}")
 
         },
         colors = ButtonDefaults.buttonColors(Color.Magenta),
